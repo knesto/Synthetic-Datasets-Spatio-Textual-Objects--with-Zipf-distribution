@@ -68,7 +68,6 @@ def generate_dataset(words,x,y,file):
         for p in range(len(words)-1):
             nZipf = int(nextZipf(r))    
             pin[nZipf]=(pin[nZipf]+1)
-        print("\n")
         for j in range(len(pin)):
             
             if pin[j] in keywords:
