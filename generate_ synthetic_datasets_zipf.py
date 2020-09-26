@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import math
-import re
-from operator import itemgetter 
+
+
 
 alpha=1
 x = -1 
@@ -12,17 +12,17 @@ m_bFirst = True #// Static first time flag
 c=0 #Normalization constant
 
 def uniform_dataset(words):
-    size = 1000000 # size of records 
+    size = 12000000   # size of records 
     x=np.random.uniform(30.0273437,60.02734375,size) # creation x points in [30.0273437,60.02734375] with uniform distribution
     y=np.random.uniform(35.87531083569679,45.87531083569679,size)
     #visualization(x,y)
-    generate_dataset(words,x,y,'uniform_dataset1.txt')
+    generate_dataset(words,x,y,'uniform_dataset.txt')
         
 
 def non_uniform_dataset(words):
 
     clusters = 5 
-    size = 200000 # 200000 records per cluster
+    size = 2400000 # 2400000 records per cluster
     
     x_center = [30.02734375,40.02734375,50.02734375,60.02734375,70.02734375] # set x centers
 
@@ -45,11 +45,11 @@ def non_uniform_dataset(words):
 def visualization(x,y): # visualization of data on earth map
     
     BBox =(-180, 180,-90,90)
-    ruh_m = plt.imread('gen_uni_1.png')
+    ruh_m = plt.imread('a.png')
 
     fig, ax = plt.subplots(figsize = (8,7))
-    ax.scatter(x, y, zorder=1, alpha= 0.2, c='b', s=13)
-    ax.set_title('Uniform Dataset')
+    #ax.scatter(x, y, zorder=1, alpha= 0.2, c='b', s=13)
+    ax.set_title('Uniform Dataset Distribution')
     ax.set_xlim(BBox[0],BBox[1])
     ax.set_ylim(BBox[2],BBox[3])
     ax.imshow(ruh_m, zorder=0, extent = BBox, aspect= 'equal')
@@ -57,29 +57,30 @@ def visualization(x,y): # visualization of data on earth map
 
 
 def generate_dataset(words,x,y,file): 
-    totalkeywordlist=[]
+    
     with open(file, "w") as f:  
       for i in range(len(x)):
         r = int(random.uniform(1, 5))
         keywords=[]
-        pin= [0] * r
+        pin= [0] * 9000
         nRand= random.random()
         rand_val(nRand)
-        for p in range(len(words)-1):
-            nZipf = int(nextZipf(r))    
-            pin[nZipf]=(pin[nZipf]+1)
-        for j in range(len(pin)):
-            
-            if pin[j] in keywords:
-                i=i-1
-                break
-            keywords.append(words[pin[j]])
-            totalkeywordlist.append(words[pin[j]])
-                                                     
+        p=1
+        while p <=r:
+            nZipf = int(nextZipf(9000))
+            if (words[nZipf] in keywords):
+                p= p-1
+            else:
+                keywords.append(words[nZipf])
+
+            p=p+1
+                                                      
         finalkeywords = ','.join(keywords)
+        #print (finalkeywords,r)
+        
         
         f.write("2|" + str(x[i]) + "|" + str(y[i]) + "|" + finalkeywords + "\n")
-    validation_zipf(totalkeywordlist)
+    #validation_zipf(totalkeywordlist)
 
 
 def nextZipf(n):
@@ -155,6 +156,7 @@ def validation_zipf(keywordlist):
     with open("zipf_validation.txt", "w") as f:
         f.write(str(list(zip(keywordlist, wordfreq))))
 def main():
+
     words=[]
     file = open("keywords.txt","r",encoding='utf-8')
     for line in file:
@@ -162,9 +164,10 @@ def main():
         words.append(fields[0])
         
     uniform_dataset(words)
-    non_uniform_dataset(words)
-    
+    #non_uniform_dataset(words)
+
 
 if __name__=="__main__":
     main()
+
 
